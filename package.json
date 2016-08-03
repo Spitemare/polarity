@@ -1,0 +1,33 @@
+{
+    "author": "David Morgan",
+    "dependencies": {
+        "pebble-events": "^1.1.0"
+    },
+    "keywords": [],
+    "name": "polarity",
+    "description": "Polarity Watchface",
+    "license": "ISC",
+    "pebble": {
+        "capabilities": [
+            "health"
+        ],
+        "displayName": "Polarity",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "1ad36bc5-29df-401d-add5-32fa5287722d",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
