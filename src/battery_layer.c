@@ -19,15 +19,6 @@ static void battery_state_handler(BatteryChargeState state, void *context) {
     value = value == 0 ? TRIG_MAX_ANGLE : value * (TRIG_MAX_ANGLE / 100);
 #endif
     logd("value = %ld", value);
-#ifdef PBL_COLOR
-    GColor color = GColorIslamicGreen;
-    if (state.charge_percent == 0) {
-        color = GColorRed;
-    } else if (state.charge_percent <= 20) {
-        color = GColorYellow;
-    }
-    radial_layer_set_color(data->radial_layer, color);
-#endif
     radial_layer_set_value(data->radial_layer, value);
 }
 
