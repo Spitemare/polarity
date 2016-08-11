@@ -29,7 +29,7 @@ BatteryLayer *battery_layer_create(GRect frame) {
 
     Data *data = (Data *) layer_get_data(this);
     data->radial_layer = radial_layer_create(bounds);
-    radial_layer_set_thickness(data->radial_layer, RADIAL_THICKNESS);
+    radial_layer_set_thickness(data->radial_layer, MEDIUM_RADIAL_THICKNESS);
     radial_layer_set_color(data->radial_layer, PBL_IF_COLOR_ELSE(GColorIslamicGreen, GColorWhite));
     layer_add_child(this, data->radial_layer);
 
