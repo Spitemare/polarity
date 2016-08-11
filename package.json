@@ -6,6 +6,10 @@
     "keywords": [],
     "name": "polarity",
     "description": "Polarity Watchface",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Spitemare/polarity.git"
+      },
     "license": "ISC",
     "pebble": {
         "capabilities": [
