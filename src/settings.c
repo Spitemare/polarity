@@ -30,9 +30,7 @@ static void save(Settings *this) {
     log_func();
     persist_write_data(PERSIST_KEY_DATA, this, sizeof(Settings));
     persist_write_int(PERSIST_KEY_VERSION, SETTINGS_VERSION);
-    if (s_handler_list) {
-        linked_list_foreach(s_handler_list, each_settings_saved, this);
-    }
+    if (s_handler_list) linked_list_foreach(s_handler_list, each_settings_saved, this);
 }
 
 static void sync_error_handler(DictionaryResult dict_error, AppMessageResult app_message_error, void *context) {
@@ -42,9 +40,7 @@ static void sync_error_handler(DictionaryResult dict_error, AppMessageResult app
 
 static void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, const Tuple *old_tuple, void *context) {
     log_func();
-    if (new_tuple == NULL || old_tuple == NULL) {
-        return;
-    }
+    if (new_tuple == NULL || old_tuple == NULL) return;
 
     Settings *settings = (Settings *) context;
     if (key == MESSAGE_KEY_COLOR_BACKGROUND) {
@@ -65,6 +61,8 @@ static void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, con
         settings->color_battery = GColorFromHEX(new_tuple->value->uint32);
     } else if (key == MESSAGE_KEY_COLOR_CONNECTION) {
         settings->color_connection = GColorFromHEX(new_tuple->value->uint32);
+    } else if (key == MESSAGE_KEY_CONNECTION_VIBE) {
+        settings->connection_vibe = atoi(new_tuple->value->cstring);
     }
     save(settings);
 }
@@ -73,6 +71,7 @@ void settings_init(void) {
     log_func();
     s_settings = malloc(sizeof(Settings));
     int32_t version = persist_read_int(PERSIST_KEY_VERSION);
+
     if (version == 0) {
         s_settings->color_background = PBL_IF_COLOR_ELSE(GColorLightGray, GColorBlack);
         s_settings->color_minute = PBL_IF_COLOR_ELSE(GColorBlue, GColorWhite);
@@ -84,6 +83,7 @@ void settings_init(void) {
 #endif
         s_settings->color_battery = PBL_IF_COLOR_ELSE(GColorIslamicGreen, GColorWhite);
         s_settings->color_connection = PBL_IF_COLOR_ELSE(GColorRed, GColorLightGray);
+        s_settings->connection_vibe = ConnectionVibeDisconnect;
         version = 1;
     } else {
         persist_read_data(PERSIST_KEY_DATA, s_settings, sizeof(Settings));
@@ -103,7 +103,8 @@ void settings_init(void) {
         TupletInteger(MESSAGE_KEY_COLOR_HEALTH, s_settings->color_health.argb),
 #endif
         TupletInteger(MESSAGE_KEY_COLOR_BATTERY, s_settings->color_battery.argb),
-        TupletInteger(MESSAGE_KEY_COLOR_CONNECTION, s_settings->color_connection.argb)
+        TupletInteger(MESSAGE_KEY_COLOR_CONNECTION, s_settings->color_connection.argb),
+        TupletInteger(MESSAGE_KEY_CONNECTION_VIBE, s_settings->connection_vibe),
     };
     app_sync_init(&s_sync, s_sync_buffer, sizeof(s_sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
         sync_changed_handler, sync_error_handler, s_settings);

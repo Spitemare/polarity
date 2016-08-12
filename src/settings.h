@@ -1,5 +1,11 @@
 #pragma once
 
+typedef enum {
+    ConnectionVibeNone = 0,
+    ConnectionVibeDisconnect,
+    ConnectionVibeDisconnectAndReconnect
+} ConnectionVibe;
+
 typedef struct {
     GColor color_background;
     GColor color_minute;
@@ -11,6 +17,7 @@ typedef struct {
 #endif
     GColor color_battery;
     GColor color_connection;
+    ConnectionVibe connection_vibe;
 } Settings;
 
 void settings_init(void);

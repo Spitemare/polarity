@@ -1,47 +1,49 @@
 {
-    "author": "David Morgan",
-    "dependencies": {
-        "pebble-events": "^1.1.0"
+  "author": "David Morgan",
+  "dependencies": {
+    "pebble-clay": "^1.0.2",
+    "pebble-events": "^1.1.0"
+  },
+  "keywords": [],
+  "name": "polarity",
+  "description": "Polarity Watchface",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Spitemare/polarity.git"
+  },
+  "license": "ISC",
+  "pebble": {
+    "capabilities": [
+      "configurable",
+      "health"
+    ],
+    "displayName": "Polarity",
+    "enableMultiJS": true,
+    "messageKeys": [
+      "COLOR_BACKGROUND",
+      "COLOR_MINUTE",
+      "COLOR_HOUR",
+      "COLOR_DAY",
+      "COLOR_MONTH",
+      "COLOR_HEALTH",
+      "COLOR_BATTERY",
+      "COLOR_CONNECTION",
+      "CONNECTION_VIBE"
+    ],
+    "projectType": "native",
+    "resources": {
+      "media": []
     },
-    "keywords": [],
-    "name": "polarity",
-    "description": "Polarity Watchface",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Spitemare/polarity.git"
-      },
-    "license": "ISC",
-    "pebble": {
-        "capabilities": [
-            "configurable",
-            "health"
-        ],
-        "displayName": "Polarity",
-        "enableMultiJS": true,
-        "messageKeys": [
-            "COLOR_BACKGROUND",
-            "COLOR_MINUTE",
-            "COLOR_HOUR",
-            "COLOR_DAY",
-            "COLOR_MONTH",
-            "COLOR_HEALTH",
-            "COLOR_BATTERY",
-            "COLOR_CONNECTION"
-        ],
-        "projectType": "native",
-        "resources": {
-            "media": []
-        },
-        "sdkVersion": "3",
-        "targetPlatforms": [
-            "aplite",
-            "basalt",
-            "chalk"
-        ],
-        "uuid": "1ad36bc5-29df-401d-add5-32fa5287722d",
-        "watchapp": {
-            "watchface": true
-        }
-    },
-    "version": "1.0.0"
+    "sdkVersion": "3",
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk"
+    ],
+    "uuid": "1ad36bc5-29df-401d-add5-32fa5287722d",
+    "watchapp": {
+      "watchface": true
+    }
+  },
+  "version": "1.0.0"
 }
