@@ -10,8 +10,6 @@ typedef struct {
     GColor color_background;
     GColor color_minute;
     GColor color_hour;
-    GColor color_day;
-    GColor color_month;
 #ifdef PBL_HEALTH
     GColor color_health;
 #endif

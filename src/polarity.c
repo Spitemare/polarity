@@ -5,8 +5,6 @@
 #include "connection.h"
 #include "minute_layer.h"
 #include "hour_layer.h"
-#include "day_layer.h"
-#include "month_layer.h"
 #ifdef PBL_HEALTH
 #include "health_layer.h"
 #endif
@@ -16,8 +14,6 @@
 static Window *s_window;
 static MinuteLayer *s_minute_layer;
 static HourLayer *s_hour_layer;
-static DayLayer *s_day_layer;
-static MonthLayer *s_month_layer;
 #ifdef PBL_HEALTH
 static HealthLayer *s_health_layer;
 #endif
@@ -47,14 +43,6 @@ static void window_load(Window *window) {
     layer_add_child(root_layer, s_hour_layer);
     inset = grect_crop(inset, RADIAL_THICKNESS);
 
-    s_day_layer = day_layer_create(inset);
-    layer_add_child(root_layer, s_day_layer);
-    inset = grect_crop(inset, SMALL_RADIAL_THICKNESS);
-
-    s_month_layer = month_layer_create(inset);
-    layer_add_child(root_layer, s_month_layer);
-    inset = grect_crop(inset, SMALL_RADIAL_THICKNESS);
-
 #ifdef PBL_HEALTH
     s_health_layer = health_layer_create(inset);
     layer_add_child(root_layer, s_health_layer);
@@ -63,7 +51,7 @@ static void window_load(Window *window) {
 
     s_battery_layer = battery_layer_create(inset);
     layer_add_child(root_layer, s_battery_layer);
-    inset = grect_crop(inset, MEDIUM_RADIAL_THICKNESS);
+    inset = grect_crop(inset, RADIAL_THICKNESS);
 
     s_connection_layer = connection_layer_create(inset);
     layer_add_child(root_layer, s_connection_layer);
@@ -81,8 +69,6 @@ static void window_unload(Window *window) {
 #ifdef PBL_HEALTH
     health_layer_destroy(s_health_layer);
 #endif
-    month_layer_destroy(s_month_layer);
-    day_layer_destroy(s_day_layer);
     hour_layer_destroy(s_hour_layer);
     minute_layer_destroy(s_minute_layer);
 }

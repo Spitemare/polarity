@@ -38,7 +38,7 @@ BatteryLayer *battery_layer_create(GRect frame) {
 
     Data *data = (Data *) layer_get_data(this);
     data->radial_layer = radial_layer_create(bounds);
-    radial_layer_set_thickness(data->radial_layer, MEDIUM_RADIAL_THICKNESS);
+    radial_layer_set_thickness(data->radial_layer, RADIAL_THICKNESS);
     layer_add_child(this, data->radial_layer);
 
     BatteryChargeState state = battery_state_service_peek();

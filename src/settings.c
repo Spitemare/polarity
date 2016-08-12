@@ -49,10 +49,6 @@ static void sync_changed_handler(const uint32_t key, const Tuple *new_tuple, con
         settings->color_minute = GColorFromHEX(new_tuple->value->uint32);
     } else if (key == MESSAGE_KEY_COLOR_HOUR) {
         settings->color_hour = GColorFromHEX(new_tuple->value->uint32);
-    } else if (key == MESSAGE_KEY_COLOR_DAY) {
-        settings->color_day = GColorFromHEX(new_tuple->value->uint32);
-    } else if (key == MESSAGE_KEY_COLOR_MONTH) {
-        settings->color_month = GColorFromHEX(new_tuple->value->uint32);
 #ifdef PBL_HEALTH
     } else if (key == MESSAGE_KEY_COLOR_HEALTH) {
         settings->color_health = GColorFromHEX(new_tuple->value->uint32);
@@ -76,8 +72,6 @@ void settings_init(void) {
         s_settings->color_background = PBL_IF_COLOR_ELSE(GColorLightGray, GColorBlack);
         s_settings->color_minute = PBL_IF_COLOR_ELSE(GColorBlue, GColorWhite);
         s_settings->color_hour = PBL_IF_COLOR_ELSE(GColorVividViolet, GColorLightGray);
-        s_settings->color_day = PBL_IF_COLOR_ELSE(GColorTiffanyBlue, GColorWhite);
-        s_settings->color_month = PBL_IF_COLOR_ELSE(GColorJazzberryJam, GColorLightGray);
 #ifdef PBL_HEALTH
         s_settings->color_health = PBL_IF_COLOR_ELSE(GColorOrange, GColorWhite);
 #endif
@@ -97,8 +91,6 @@ void settings_init(void) {
         TupletInteger(MESSAGE_KEY_COLOR_BACKGROUND, s_settings->color_background.argb),
         TupletInteger(MESSAGE_KEY_COLOR_MINUTE, s_settings->color_minute.argb),
         TupletInteger(MESSAGE_KEY_COLOR_HOUR, s_settings->color_hour.argb),
-        TupletInteger(MESSAGE_KEY_COLOR_DAY, s_settings->color_day.argb),
-        TupletInteger(MESSAGE_KEY_COLOR_MONTH, s_settings->color_month.argb),
 #ifdef PBL_HEALTH
         TupletInteger(MESSAGE_KEY_COLOR_HEALTH, s_settings->color_health.argb),
 #endif
