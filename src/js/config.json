@@ -1,0 +1,140 @@
+[
+    {
+        "type": "section",
+        "items": [
+            {
+                "type": "heading",
+                "defaultValue": "Bluetooth"
+            },
+            {
+                "type": "radiogroup",
+                "messageKey": "CONNECTION_VIBE",
+                "label": "Bluetooth Vibrate",
+                "defaultValue": "1",
+                "options": [
+                    {
+                        "label": "On Disconnect",
+                        "value": "1"
+                    },
+                    {
+                        "label": "On Disconnect & Reconnect",
+                        "value": "2"
+                    },
+                    {
+                        "label": "Neither",
+                        "value": "0"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "section",
+        "items": [
+            {
+                "type": "heading",
+                "defaultValue": "Colors"
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_BACKGROUND",
+                "label": "Background",
+                "defaultValue": "#AAAAAA",
+                "sunlight": false,
+                "capabilities": [ "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_BACKGROUND",
+                "label": "Background",
+                "defaultValue": "#000000",
+                "allowGray": true,
+                "capabilities": [ "BW" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_MINUTE",
+                "label": "Minute",
+                "defaultValue": "#0000FF",
+                "sunlight": false,
+                "capabilities": [ "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_MINUTE",
+                "label": "Minute",
+                "defaultValue": "#FFFFFF",
+                "allowGray": true,
+                "capabilities": [ "BW" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_HOUR",
+                "label": "Hour",
+                "defaultValue": "#AA00FF",
+                "sunlight": false,
+                "capabilities": [ "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_HOUR",
+                "label": "Hour",
+                "defaultValue": "#AAAAAA",
+                "allowGray": true,
+                "capabilities": [ "BW" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_HEALTH",
+                "label": "Health",
+                "defaultValue": "#FF5500",
+                "sunlight": false,
+                "capabilities": [ "HEALTH", "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_HEALTH",
+                "label": "Health",
+                "defaultValue": "#FFFFFF",
+                "allowGray": true,
+                "capabilities": [ "HEALTH", "BW" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_BATTERY",
+                "label": "Battery",
+                "defaultValue": "#00AA00",
+                "sunlight": false,
+                "capabilities": [ "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_BATTERY",
+                "label": "Battery",
+                "defaultValue": "#FFFFFF",
+                "allowGray": true,
+                "capabilities": [ "BW" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_CONNECTION",
+                "label": "Connection",
+                "defaultValue": "#FF0000",
+                "sunlight": false,
+                "capabilities": [ "COLOR" ]
+            },
+            {
+                "type": "color",
+                "messageKey": "COLOR_CONNECTION",
+                "label": "Connection",
+                "defaultValue": "#AAAAAA",
+                "allowGray": true,
+                "capabilities": [ "BW" ]
+            }
+        ]
+    },
+    {
+        "type": "submit",
+        "defaultValue": "Save"
+    }
+]
