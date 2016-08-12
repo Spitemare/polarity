@@ -13,11 +13,21 @@
     "license": "ISC",
     "pebble": {
         "capabilities": [
+            "configurable",
             "health"
         ],
         "displayName": "Polarity",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "COLOR_BACKGROUND",
+            "COLOR_MINUTE",
+            "COLOR_HOUR",
+            "COLOR_DAY",
+            "COLOR_MONTH",
+            "COLOR_HEALTH",
+            "COLOR_BATTERY",
+            "COLOR_CONNECTION"
+        ],
         "projectType": "native",
         "resources": {
             "media": []

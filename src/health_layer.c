@@ -3,12 +3,14 @@
 #include <pebble-events/pebble-events.h>
 #include "logging.h"
 #include "constants.h"
+#include "settings.h"
 #include "radial_layer.h"
 #include "health_layer.h"
 
 typedef struct {
     RadialLayer *radial_layer;
     EventHandle health_service_event_handle;
+    EventHandle settings_event_handle;
     HealthValue goal;
 } Data;
 
@@ -46,6 +48,13 @@ static void health_event_handler(HealthEventType event, void *context) {
     }
 }
 
+static void settings_handler(Settings *settings, void *context) {
+    log_func();
+    HealthLayer *this = (HealthLayer *) context;
+    Data *data = layer_get_data(this);
+    radial_layer_set_color(data->radial_layer, settings->color_health);
+}
+
 HealthLayer *health_layer_create(GRect frame) {
     log_func();
     HealthLayer *this = layer_create_with_data(frame, sizeof(Data));
@@ -54,11 +63,13 @@ HealthLayer *health_layer_create(GRect frame) {
     Data *data = (Data *) layer_get_data(this);
     data->radial_layer = radial_layer_create(bounds);
     radial_layer_set_thickness(data->radial_layer, RADIAL_THICKNESS);
-    radial_layer_set_color(data->radial_layer, PBL_IF_COLOR_ELSE(GColorOrange, GColorWhite));
     layer_add_child(this, data->radial_layer);
 
     health_event_handler(HealthEventSignificantUpdate, this);
     data->health_service_event_handle = events_health_service_events_subscribe(health_event_handler, this);
+
+    settings_handler(settings_peek(), this);
+    data->settings_event_handle = events_settings_subscribe(settings_handler, this);
 
     return this;
 }
@@ -66,6 +77,7 @@ HealthLayer *health_layer_create(GRect frame) {
 void health_layer_destroy(HealthLayer *this) {
     log_func();
     Data *data = (Data *) layer_get_data(this);
+    events_settings_unsubscribe(data->settings_event_handle);
     events_health_service_events_unsubscribe(data->health_service_event_handle);
     radial_layer_destroy(data->radial_layer);
     layer_destroy(this);

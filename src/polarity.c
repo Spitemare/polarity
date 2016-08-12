@@ -1,29 +1,39 @@
 #include <pebble.h>
 #include "logging.h"
 #include "constants.h"
+#include "settings.h"
 #include "connection.h"
 #include "minute_layer.h"
 #include "hour_layer.h"
 #include "day_layer.h"
 #include "month_layer.h"
-#include "battery_layer.h"
-#include "connection_layer.h"
 #ifdef PBL_HEALTH
 #include "health_layer.h"
-
-static HealthLayer *s_health_layer;
 #endif
+#include "battery_layer.h"
+#include "connection_layer.h"
+
 static Window *s_window;
 static MinuteLayer *s_minute_layer;
 static HourLayer *s_hour_layer;
 static DayLayer *s_day_layer;
 static MonthLayer *s_month_layer;
+#ifdef PBL_HEALTH
+static HealthLayer *s_health_layer;
+#endif
 static BatteryLayer *s_battery_layer;
 static ConnectionLayer *s_connection_layer;
 
+static EventHandle s_settings_event_handle;
+
+static void settings_handler(Settings *settings, void *context) {
+    log_func();
+    Window *window = (Window *) context;
+    window_set_background_color(window, settings->color_background);
+}
+
 static void window_load(Window *window) {
     log_func();
-    window_set_background_color(window, PBL_IF_COLOR_ELSE(GColorLightGray, GColorBlack));
 
     Layer *root_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(root_layer);
@@ -57,10 +67,15 @@ static void window_load(Window *window) {
 
     s_connection_layer = connection_layer_create(inset);
     layer_add_child(root_layer, s_connection_layer);
+
+    settings_handler(settings_peek(), window);
+    s_settings_event_handle = events_settings_subscribe(settings_handler, window);
 }
 
 static void window_unload(Window *window) {
     log_func();
+    events_settings_unsubscribe(s_settings_event_handle);
+
     connection_layer_destroy(s_connection_layer);
     battery_layer_destroy(s_battery_layer);
 #ifdef PBL_HEALTH
@@ -74,6 +89,7 @@ static void window_unload(Window *window) {
 
 static void init(void) {
     log_func();
+    settings_init();
     connection_init();
 
     s_window = window_create();
@@ -89,6 +105,7 @@ static void deinit(void) {
     window_destroy(s_window);
 
     connection_deinit();
+    settings_deinit();
 }
 
 int main(void) {

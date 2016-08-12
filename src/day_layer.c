@@ -2,12 +2,14 @@
 #include <pebble-events/pebble-events.h>
 #include "logging.h"
 #include "constants.h"
+#include "settings.h"
 #include "radial_layer.h"
 #include "day_layer.h"
 
 typedef struct {
     RadialLayer *radial_layer;
     EventHandle tick_timer_event_handle;
+    EventHandle settings_event_handle;
     int days_in_month;
 } Data;
 
@@ -42,6 +44,13 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed, void *co
     radial_layer_set_value(data->radial_layer, value);
 }
 
+static void settings_handler(Settings *settings, void *context) {
+    log_func();
+    DayLayer *this = (DayLayer *) context;
+    Data *data = (Data *) layer_get_data(this);
+    radial_layer_set_color(data->radial_layer, settings->color_day);
+}
+
 DayLayer *day_layer_create(GRect frame) {
     log_func();
     DayLayer *this = layer_create_with_data(frame, sizeof(Data));
@@ -50,7 +59,6 @@ DayLayer *day_layer_create(GRect frame) {
     Data *data = (Data *) layer_get_data(this);
     data->radial_layer = radial_layer_create(bounds);
     radial_layer_set_thickness(data->radial_layer, SMALL_RADIAL_THICKNESS);
-    radial_layer_set_color(data->radial_layer, PBL_IF_COLOR_ELSE(GColorTiffanyBlue, GColorWhite));
     layer_add_child(this, data->radial_layer);
 
     time_t now = time(NULL);
@@ -58,12 +66,16 @@ DayLayer *day_layer_create(GRect frame) {
     tick_handler(t, MONTH_UNIT | DAY_UNIT, this);
     data->tick_timer_event_handle = events_tick_timer_service_subscribe_context(DAY_UNIT, tick_handler, this);
 
+    settings_handler(settings_peek(), this);
+    data->settings_event_handle = events_settings_subscribe(settings_handler, this);
+
     return this;
 }
 
 void day_layer_destroy(DayLayer *this) {
     log_func();
     Data *data = (Data *) layer_get_data(this);
+    events_settings_unsubscribe(data->settings_event_handle);
     events_tick_timer_service_unsubscribe(data->tick_timer_event_handle);
     radial_layer_destroy(data->radial_layer);
     layer_destroy(this);
