@@ -2,12 +2,6 @@
 #include "logging.h"
 #include "radial_layer.h"
 
-typedef struct {
-    uint16_t thickness;
-    uint32_t value;
-    GColor color;
-} Data;
-
 #ifdef PBL_RECT
 typedef struct {
     uint16_t tr;
@@ -17,9 +11,10 @@ typedef struct {
     uint16_t tl;
 } Border;
 
-static Border calculate_border(GRect bounds, uint32_t value) {
+static Border *calculate_border(GRect bounds, uint32_t value) {
     log_func();
-    Border border = { 0, 0, 0, 0, 0 };
+    Border *border = malloc(sizeof(Border));
+    memset(border, 0, sizeof(Border));
     uint16_t w = bounds.size.w;
     uint16_t h = bounds.size.h;
 
@@ -27,63 +22,72 @@ static Border calculate_border(GRect bounds, uint32_t value) {
     uint32_t progress = (value * pixels) / 100;
 
     if (progress == 0) {
-        border.tr = w / 2;
-        border.r = h;
-        border.b = w;
-        border.l = h;
-        border.tl = w / 2;
+        border->tr = w / 2;
+        border->r = h;
+        border->b = w;
+        border->l = h;
+        border->tl = w / 2;
         return border;
     }
 
     if (progress < (w / 2)) {
-        border.tr = progress;
+        border->tr = progress;
         return border;
     } else {
-        border.tr = w / 2;
+        border->tr = w / 2;
     }
 
     if (progress < ((w / 2) + h)) {
-        border.r = progress - (w / 2);
+        border->r = progress - (w / 2);
         return border;
     } else {
-        border.r = h;
+        border->r = h;
     }
 
     if (progress < ((uint32_t) ((w / 2) + h + w))) {
-        border.b = progress - (w / 2) - h;
+        border->b = progress - (w / 2) - h;
         return border;
     } else {
-        border.b = w;
+        border->b = w;
     }
 
     if (progress < ((uint32_t) ((w / 2) + (2 * h) + w))) {
-        border.l = progress - (w / 2) - h - w;
+        border->l = progress - (w / 2) - h - w;
         return border;
     } else {
-        border.l = h;
-        border.tl = progress - (w / 2) - (2 * h) - w;
+        border->l = h;
+        border->tl = progress - (w / 2) - (2 * h) - w;
     }
     return border;
 }
 
-static void draw_border(GContext *ctx, GRect bounds, Border border, uint16_t thickness) {
+static void draw_border(GContext *ctx, GRect bounds, Border *border, uint16_t thickness) {
     log_func();
-    GRect rect = GRect(bounds.origin.x, bounds.origin.y, border.tl, thickness);
+    GRect rect = GRect(bounds.origin.x, bounds.origin.y, border->tl, thickness);
     graphics_fill_rect(ctx, rect, 0, GCornerNone);
 
-    rect = GRect(bounds.origin.x + (bounds.size.w / 2), bounds.origin.y, border.tr, thickness);
+    rect = GRect(bounds.origin.x + (bounds.size.w / 2), bounds.origin.y, border->tr, thickness);
     graphics_fill_rect(ctx, rect, 0, GCornerNone);
 
-    rect = GRect(bounds.origin.x, bounds.origin.y + (bounds.size.h - border.l), thickness, border.l);
+    rect = GRect(bounds.origin.x, bounds.origin.y + (bounds.size.h - border->l), thickness, border->l);
     graphics_fill_rect(ctx, rect, 0, GCornerNone);
 
-    rect = GRect(bounds.size.w - thickness, bounds.origin.y, thickness, border.r);
+    rect = GRect(bounds.size.w - thickness, bounds.origin.y, thickness, border->r);
     graphics_fill_rect(ctx, rect, 0, GCornerNone);
 
-    rect = GRect(bounds.origin.x + (bounds.size.w - border.b), bounds.size.h - thickness, border.b, thickness);
+    rect = GRect(bounds.origin.x + (bounds.size.w - border->b), bounds.size.h - thickness, border->b, thickness);
     graphics_fill_rect(ctx, rect, 0, GCornerNone);
 }
 #endif
+
+typedef struct {
+    uint16_t thickness;
+    uint32_t value;
+    GColor color;
+#ifdef PBL_RECT
+    Border *border;
+#endif
+} Data;
 
 static void update_proc(Layer *this, GContext *ctx) {
     log_func();
@@ -93,8 +97,10 @@ static void update_proc(Layer *this, GContext *ctx) {
 #ifdef PBL_ROUND
     graphics_fill_radial(ctx, bounds, GOvalScaleModeFitCircle, data->thickness, 0, data->value);
 #else
-    Border border = calculate_border(bounds, data->value);
-    draw_border(ctx, bounds, border, data->thickness);
+    if (data->border == NULL) {
+        data->border = calculate_border(bounds, data->value);
+    }
+    draw_border(ctx, bounds, data->border, data->thickness);
 #endif
 }
 
@@ -107,6 +113,10 @@ RadialLayer *radial_layer_create(GRect frame) {
 
 void radial_layer_destroy(RadialLayer *this) {
     log_func();
+#ifdef PBL_RECT
+    Data *data = (Data *) layer_get_data(this);
+    if (data->border) free(data->border);
+#endif
     layer_destroy(this);
 }
 
@@ -121,6 +131,12 @@ void radial_layer_set_value(RadialLayer *this, uint32_t value) {
     log_func();
     Data *data = (Data *) layer_get_data(this);
     data->value = value;
+#ifdef PBL_RECT
+    if (data->border) {
+        free(data->border);
+        data->border = NULL;
+    }
+#endif
     layer_mark_dirty(this);
 }
 
