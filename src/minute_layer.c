@@ -16,11 +16,15 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed, void *co
     log_func();
     MinuteLayer *this = (MinuteLayer *) context;
     Data *data = (Data *) layer_get_data(this);
+#ifdef DEMO
+    uint32_t value = PBL_IF_ROUND_ELSE(TRIG_MAX_ANGLE * 0.75, 75);
+#else
 #ifdef PBL_ROUND
     uint32_t value = tick_time->tm_min == 0 ? TRIG_MAX_ANGLE : tick_time->tm_min * (TRIG_MAX_ANGLE / 60);
 #else
     uint32_t value = (tick_time->tm_min * 100) / 60;
-#endif
+#endif // PBL_ROUND
+#endif // DEMO
     logd("value = %ld", value);
     radial_layer_set_value(data->radial_layer, value);
 }

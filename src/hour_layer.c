@@ -16,12 +16,16 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed, void *co
     log_func();
     HourLayer *this = (HourLayer *) context;
     Data *data = (Data *) layer_get_data(this);
+#ifdef DEMO
+    uint32_t value = PBL_IF_ROUND_ELSE(TRIG_MAX_ANGLE / 2, 50);
+#else
     int hour = tick_time->tm_hour % 12;
 #ifdef PBL_ROUND
     uint32_t value = hour == 0 ? TRIG_MAX_ANGLE : hour * (TRIG_MAX_ANGLE / 12);
 #else
     uint32_t value = (hour * 100) / 12;
-#endif
+#endif // PBL_ROUND
+#endif // DEMO
     logd("value = %ld", value);
     radial_layer_set_value(data->radial_layer, value);
 }

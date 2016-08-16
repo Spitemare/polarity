@@ -33,12 +33,16 @@ static void health_event_handler(HealthEventType event, void *context) {
     } else if (event == HealthEventMovementUpdate) {
         HealthServiceAccessibilityMask mask = health_service_metric_accessible(HealthMetricStepCount, time_start_of_today(), time(NULL));
         if (mask & HealthServiceAccessibilityMaskAvailable) {
+#ifdef DEMO
+            uint32_t value = PBL_IF_ROUND_ELSE((TRIG_MAX_ANGLE / 100) * 75, 75);
+#else
             HealthValue sum = health_service_sum_today(HealthMetricStepCount);
 #ifdef PBL_ROUND
             uint32_t value = sum >= data->goal ? TRIG_MAX_ANGLE : sum * (TRIG_MAX_ANGLE / data->goal);
 #else
             uint32_t value = (sum * 100) / data->goal;
-#endif
+#endif // PBL_ROUND
+#endif // DEMO
             logd("value = %ld", value);
             radial_layer_set_value(data->radial_layer, value);
             layer_set_hidden(this, false);
